@@ -9,399 +9,147 @@
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Zen Maru Gothic', sans-serif; background: #fdf8f3; min-height: 100vh; }
+    .app { min-height:100vh; background:linear-gradient(135deg,#fdf8f3 0%,#fce9d8 50%,#fdf0e8 100%); padding:28px 16px 80px; position:relative; }
+    .app::before { content:''; position:fixed; top:-200px; right:-200px; width:500px; height:500px; background:radial-gradient(circle,rgba(255,180,130,.2) 0%,transparent 70%); pointer-events:none; }
+    .app::after { content:''; position:fixed; bottom:-200px; left:-200px; width:500px; height:500px; background:radial-gradient(circle,rgba(180,140,255,.1) 0%,transparent 70%); pointer-events:none; }
+    .container { max-width:520px; margin:0 auto; position:relative; z-index:1; }
 
 ```
-body {
-  font-family: 'Zen Maru Gothic', sans-serif;
-  background: #fdf8f3;
-  min-height: 100vh;
-}
+.tabs { display:flex; gap:6px; margin-bottom:20px; background:rgba(255,255,255,.5); border-radius:16px; padding:4px; }
+.tab-btn { flex:1; padding:10px 4px; border:none; background:transparent; border-radius:12px; font-family:'Zen Maru Gothic',sans-serif; font-size:12px; font-weight:700; color:#9b7a6a; cursor:pointer; transition:all .2s; }
+.tab-btn.active { background:white; color:#c87840; box-shadow:0 2px 8px rgba(200,120,60,.15); }
 
-.app {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #fdf8f3 0%, #fce9d8 50%, #fdf0e8 100%);
-  padding: 32px 16px 64px;
-  position: relative;
-  overflow: hidden;
-}
+.header { text-align:center; margin-bottom:24px; }
+.header-emoji { font-size:42px; display:block; margin-bottom:6px; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.header h1 { font-family:'Noto Serif JP',serif; font-size:21px; color:#4a3728; letter-spacing:.05em; font-weight:600; }
+.header p { font-size:12px; color:#9b7a6a; margin-top:4px; }
 
-.app::before {
-  content: '';
-  position: fixed;
-  top: -200px; right: -200px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(255,180,130,0.2) 0%, transparent 70%);
-  pointer-events: none;
-}
+.card { background:rgba(255,255,255,.75); backdrop-filter:blur(12px); border:1px solid rgba(255,200,160,.4); border-radius:22px; padding:22px; margin-bottom:12px; box-shadow:0 4px 24px rgba(200,120,60,.08); }
+.section-label { font-size:12px; font-weight:700; color:#c87840; letter-spacing:.08em; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
 
-.app::after {
-  content: '';
-  position: fixed;
-  bottom: -200px; left: -200px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(180,140,255,0.1) 0%, transparent 70%);
-  pointer-events: none;
-}
+.chips { display:flex; flex-wrap:wrap; gap:7px; }
+.chip { padding:7px 13px; border-radius:100px; border:1.5px solid rgba(200,120,60,.25); background:rgba(255,255,255,.6); color:#6b4c3a; font-size:12px; cursor:pointer; transition:all .2s; font-family:'Zen Maru Gothic',sans-serif; }
+.chip:hover { border-color:#c87840; background:rgba(200,120,60,.08); }
+.chip.selected { background:#c87840; border-color:#c87840; color:white; box-shadow:0 2px 10px rgba(200,120,60,.3); }
 
-.container {
-  max-width: 520px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
+.location-tabs { display:flex; gap:6px; margin-bottom:12px; }
+.loc-tab { flex:1; padding:8px; border:1.5px solid rgba(200,120,60,.25); border-radius:10px; background:rgba(255,255,255,.5); color:#9b7a6a; font-size:12px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; text-align:center; }
+.loc-tab.active { background:#c87840; border-color:#c87840; color:white; }
 
-.header { text-align: center; margin-bottom: 32px; }
+.slider-val { text-align:center; font-size:17px; font-weight:700; color:#c87840; margin-bottom:4px; }
+.slider { width:100%; -webkit-appearance:none; height:6px; border-radius:3px; outline:none; cursor:pointer; margin:10px 0 8px; background:linear-gradient(to right,#c87840 50%,#e8d4c4 50%); }
+.slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:white; border:2.5px solid #c87840; box-shadow:0 2px 8px rgba(200,120,60,.25); cursor:pointer; }
+.slider-labels { display:flex; justify-content:space-between; font-size:11px; color:#9b7a6a; }
+.count-row { display:flex; align-items:center; gap:12px; }
+.count-badge { font-size:18px; font-weight:700; color:#c87840; background:rgba(200,120,60,.1); border-radius:10px; padding:4px 14px; white-space:nowrap; }
 
-.header-emoji {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 8px;
-  animation: float 3s ease-in-out infinite;
-}
+.free-input { width:100%; border:1.5px solid rgba(200,120,60,.25); border-radius:14px; padding:11px 14px; font-family:'Zen Maru Gothic',sans-serif; font-size:13px; color:#4a3728; background:rgba(255,255,255,.6); outline:none; resize:none; transition:border-color .2s; }
+.free-input:focus { border-color:#c87840; background:rgba(255,255,255,.9); }
+.free-input::placeholder { color:#c4a898; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
+.api-key-card { background:rgba(255,255,255,.75); backdrop-filter:blur(12px); border:1.5px solid rgba(200,120,60,.3); border-radius:22px; padding:20px; margin-bottom:12px; box-shadow:0 4px 24px rgba(200,120,60,.08); }
+.api-key-row { display:flex; flex-direction:column; gap:8px; }
+.api-key-input { width:100%; border:1.5px solid rgba(200,120,60,.25); border-radius:11px; padding:10px 13px; font-family:'Zen Maru Gothic',sans-serif; font-size:13px; color:#4a3728; background:rgba(255,255,255,.7); outline:none; }
+.api-key-input:focus { border-color:#c87840; }
+.api-key-input::placeholder { color:#c4a898; }
+.api-key-set-badge { display:flex; align-items:center; gap:6px; font-size:13px; color:#4a7a40; background:rgba(60,160,80,.1); border:1px solid rgba(60,160,80,.25); border-radius:11px; padding:9px 13px; }
+.save-btn { width:100%; padding:11px; background:#c87840; color:white; border:none; border-radius:11px; font-size:14px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; }
+.save-btn:hover { background:#b06830; }
+.clear-btn { padding:7px 12px; background:transparent; color:#9b7a6a; border:1.5px solid rgba(200,120,60,.25); border-radius:9px; font-size:12px; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; align-self:flex-start; transition:all .2s; }
+.clear-btn:hover { border-color:#c04040; color:#c04040; }
+.api-note { font-size:11px; color:#b09080; margin-top:8px; line-height:1.6; }
 
-.header h1 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 22px;
-  color: #4a3728;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
+.btn-row { display:flex; gap:8px; margin-top:8px; }
+.btn { flex:1; padding:15px; background:linear-gradient(135deg,#c87840 0%,#e0935a 100%); color:white; border:none; border-radius:16px; font-size:15px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; letter-spacing:.04em; box-shadow:0 4px 20px rgba(200,120,60,.35); transition:all .2s; }
+.btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 28px rgba(200,120,60,.45); }
+.btn:disabled { opacity:.6; cursor:not-allowed; }
+.btn-rand { flex:0 0 auto; padding:15px 18px; background:rgba(255,255,255,.8); color:#c87840; border:2px solid rgba(200,120,60,.35); border-radius:16px; font-size:20px; cursor:pointer; transition:all .2s; box-shadow:0 2px 10px rgba(200,120,60,.1); }
+.btn-rand:hover { background:rgba(200,120,60,.1); }
+.btn-rand:disabled { opacity:.5; cursor:not-allowed; }
 
-.header p { font-size: 13px; color: #9b7a6a; margin-top: 6px; }
+.weather-auto-btn { font-size:11px; color:#c87840; background:rgba(200,120,60,.08); border:1px solid rgba(200,120,60,.2); border-radius:8px; padding:3px 10px; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif; transition:all .2s; }
+.weather-auto-btn:hover { background:rgba(200,120,60,.15); }
 
-.card {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,200,160,0.4);
-  border-radius: 24px;
-  padding: 28px 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 24px rgba(200,120,60,0.08);
-}
+.loading-wrap { text-align:center; padding:28px; }
+.loading-dots { display:inline-flex; gap:6px; margin-bottom:10px; }
+.dot { width:10px; height:10px; border-radius:50%; background:#c87840; animation:bounce 1.2s ease-in-out infinite; }
+.dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:.4} 40%{transform:translateY(-10px);opacity:1} }
+.loading-text { font-size:13px; color:#9b7a6a; }
 
-.section-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #c87840;
-  letter-spacing: 0.12em;
-  margin-bottom: 14px;
-}
+.result-card { background:rgba(255,255,255,.85); backdrop-filter:blur(16px); border:1.5px solid rgba(200,120,60,.2); border-radius:22px; padding:22px; margin-bottom:12px; box-shadow:0 4px 18px rgba(200,120,60,.09); animation:slideUp .35s ease both; }
+@keyframes slideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.result-header { display:flex; align-items:flex-start; gap:11px; margin-bottom:11px; }
+.result-icon { font-size:32px; flex-shrink:0; line-height:1; }
+.result-title-wrap { flex:1; }
+.result-title-wrap h2 { font-family:'Noto Serif JP',serif; font-size:17px; color:#3a2a1e; font-weight:600; margin-bottom:3px; }
+.result-tag { font-size:11px; color:#c87840; font-weight:700; background:rgba(200,120,60,.1); padding:2px 9px; border-radius:100px; display:inline-block; }
+.fav-btn { background:none; border:none; font-size:21px; cursor:pointer; padding:3px; flex-shrink:0; transition:transform .2s; line-height:1; }
+.fav-btn:hover { transform:scale(1.2); }
+.result-desc { font-size:13px; color:#5a3e30; line-height:1.75; margin-bottom:10px; }
+.result-point { font-size:12px; color:#c87840; margin-bottom:10px; font-style:italic; }
+.result-meta { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:11px; }
+.meta-badge { font-size:11px; color:#7a5a48; background:rgba(200,120,60,.08); border:1px solid rgba(200,120,60,.2); padding:3px 11px; border-radius:100px; }
+.card-actions { display:flex; gap:7px; }
+.share-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:5px; padding:8px 12px; background:rgba(200,120,60,.08); border:1.5px solid rgba(200,120,60,.22); border-radius:11px; color:#c87840; font-size:12px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; }
+.share-btn:hover { background:rgba(200,120,60,.15); border-color:#c87840; }
+.cal-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:5px; padding:8px 12px; background:rgba(80,140,80,.08); border:1.5px solid rgba(80,140,80,.25); border-radius:11px; color:#4a7a4a; font-size:12px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; }
+.cal-btn:hover { background:rgba(80,140,80,.15); }
 
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.retry-btn { width:100%; padding:13px; background:transparent; color:#c87840; border:2px solid rgba(200,120,60,.35); border-radius:16px; font-size:14px; font-weight:700; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; margin-top:4px; }
+.retry-btn:hover { background:rgba(200,120,60,.06); border-color:#c87840; }
+.error-msg { text-align:center; color:#c04040; font-size:13px; padding:14px; background:rgba(255,200,200,.3); border-radius:13px; margin-top:8px; }
 
-.chip {
-  padding: 8px 16px;
-  border-radius: 100px;
-  border: 1.5px solid rgba(200,120,60,0.25);
-  background: rgba(255,255,255,0.6);
-  color: #6b4c3a;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Zen Maru Gothic', sans-serif;
-}
+.fav-empty { text-align:center; padding:44px 20px; color:#b09080; font-size:14px; line-height:1.8; }
+.fav-empty span { font-size:38px; display:block; margin-bottom:10px; }
+.fav-card { background:rgba(255,255,255,.8); border:1px solid rgba(200,120,60,.18); border-radius:20px; padding:18px; margin-bottom:10px; }
+.fav-card-header { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+.fav-card-icon { font-size:26px; }
+.fav-card-title { font-family:'Noto Serif JP',serif; font-size:15px; color:#3a2a1e; font-weight:600; }
+.fav-card-tag { font-size:11px; color:#c87840; background:rgba(200,120,60,.1); padding:2px 8px; border-radius:100px; display:inline-block; margin-top:2px; }
+.fav-card-desc { font-size:12.5px; color:#6a5048; line-height:1.7; margin-bottom:9px; }
+.fav-remove-btn { padding:6px 12px; background:transparent; color:#c04040; border:1.5px solid rgba(200,60,60,.22); border-radius:9px; font-size:12px; font-family:'Zen Maru Gothic',sans-serif; cursor:pointer; transition:all .2s; }
+.fav-remove-btn:hover { background:rgba(200,60,60,.08); }
 
-.chip:hover { border-color: #c87840; background: rgba(200,120,60,0.08); }
-.chip.selected {
-  background: #c87840;
-  border-color: #c87840;
-  color: white;
-  box-shadow: 0 2px 12px rgba(200,120,60,0.3);
-}
+.history-item { background:rgba(255,255,255,.7); border:1px solid rgba(200,120,60,.15); border-radius:16px; padding:14px 16px; margin-bottom:8px; cursor:pointer; transition:all .2s; }
+.history-item:hover { background:rgba(255,255,255,.95); border-color:rgba(200,120,60,.35); }
+.history-meta { font-size:11px; color:#b09080; margin-bottom:5px; }
+.history-tags { display:flex; flex-wrap:wrap; gap:5px; }
+.history-tag { font-size:11px; color:#7a5a48; background:rgba(200,120,60,.08); border:1px solid rgba(200,120,60,.15); padding:2px 9px; border-radius:100px; }
 
-.budget-slider-wrap { padding: 4px 0 8px; }
-
-.slider {
-  width: 100%;
-  -webkit-appearance: none;
-  height: 6px;
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-  margin: 12px 0 8px;
-  background: linear-gradient(to right, #c87840 0%, #c87840 50%, #e8d4c4 50%, #e8d4c4 100%);
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: white;
-  border: 2.5px solid #c87840;
-  box-shadow: 0 2px 8px rgba(200,120,60,0.25);
-  cursor: pointer;
-}
-
-.budget-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #9b7a6a;
-}
-
-.budget-value {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #c87840;
-  margin-bottom: 4px;
-}
-
-.free-input {
-  width: 100%;
-  border: 1.5px solid rgba(200,120,60,0.25);
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  font-size: 13px;
-  color: #4a3728;
-  background: rgba(255,255,255,0.6);
-  outline: none;
-  resize: none;
-  transition: border-color 0.2s;
-}
-
-.free-input:focus { border-color: #c87840; background: rgba(255,255,255,0.9); }
-.free-input::placeholder { color: #c4a898; }
-
-.api-key-card {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(200,120,60,0.3);
-  border-radius: 24px;
-  padding: 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 24px rgba(200,120,60,0.08);
-}
-
-.api-key-row { display: flex; flex-direction: column; gap: 8px; }
-
-.api-key-input {
-  width: 100%;
-  border: 1.5px solid rgba(200,120,60,0.25);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  font-size: 13px;
-  color: #4a3728;
-  background: rgba(255,255,255,0.7);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.api-key-input:focus { border-color: #c87840; }
-.api-key-input::placeholder { color: #c4a898; }
-
-.api-key-set-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #4a7a40;
-  background: rgba(60,160,80,0.1);
-  border: 1px solid rgba(60,160,80,0.25);
-  border-radius: 12px;
-  padding: 10px 14px;
-}
-
-.save-btn {
-  width: 100%;
-  padding: 12px;
-  background: #c87840;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.save-btn:hover { background: #b06830; }
-
-.clear-btn {
-  padding: 10px 14px;
-  background: transparent;
-  color: #9b7a6a;
-  border: 1.5px solid rgba(200,120,60,0.25);
-  border-radius: 12px;
-  font-size: 12px;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  align-self: flex-start;
-}
-
-.clear-btn:hover { border-color: #c04040; color: #c04040; }
-
-.api-note { font-size: 11px; color: #b09080; margin-top: 10px; line-height: 1.6; }
-
-.btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, #c87840 0%, #e0935a 100%);
-  color: white;
-  border: none;
-  border-radius: 18px;
-  font-size: 16px;
-  font-weight: 700;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  box-shadow: 0 4px 20px rgba(200,120,60,0.35);
-  transition: all 0.2s ease;
-  margin-top: 8px;
-}
-
-.btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(200,120,60,0.45);
-}
-
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.loading-wrap { text-align: center; padding: 32px; }
-
-.loading-dots { display: inline-flex; gap: 6px; margin-bottom: 12px; }
-
-.dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #c87840;
-  animation: bounce 1.2s ease-in-out infinite;
-}
-.dot:nth-child(2) { animation-delay: 0.2s; }
-.dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-  40% { transform: translateY(-10px); opacity: 1; }
-}
-
-.loading-text { font-size: 13px; color: #9b7a6a; }
-
-.result-card {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(200,120,60,0.3);
-  border-radius: 24px;
-  padding: 28px 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 32px rgba(200,120,60,0.12);
-  animation: slideUp 0.4s ease;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.result-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
-.result-icon { font-size: 36px; flex-shrink: 0; line-height: 1; }
-
-.result-title-wrap h2 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 18px;
-  color: #3a2a1e;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.result-tag {
-  font-size: 11px;
-  color: #c87840;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  background: rgba(200,120,60,0.1);
-  padding: 2px 10px;
-  border-radius: 100px;
-  display: inline-block;
-}
-
-.result-desc {
-  font-size: 13.5px;
-  color: #5a3e30;
-  line-height: 1.75;
-  margin-bottom: 16px;
-  white-space: pre-wrap;
-}
-
-.result-point {
-  font-size: 12px;
-  color: #c87840;
-  margin-bottom: 12px;
-  font-style: italic;
-}
-
-.result-meta { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.meta-badge {
-  font-size: 12px;
-  color: #7a5a48;
-  background: rgba(200,120,60,0.08);
-  border: 1px solid rgba(200,120,60,0.2);
-  padding: 4px 12px;
-  border-radius: 100px;
-}
-
-.retry-btn {
-  width: 100%;
-  padding: 14px;
-  background: transparent;
-  color: #c87840;
-  border: 2px solid rgba(200,120,60,0.4);
-  border-radius: 18px;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 4px;
-}
-
-.retry-btn:hover { background: rgba(200,120,60,0.06); border-color: #c87840; }
-
-.error-msg {
-  text-align: center;
-  color: #c04040;
-  font-size: 13px;
-  padding: 16px;
-  background: rgba(255,200,200,0.3);
-  border-radius: 14px;
-  margin-top: 8px;
-}
-
-.hidden { display: none; }
+.copy-toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px); background:#4a3728; color:white; padding:10px 20px; border-radius:100px; font-size:13px; opacity:0; transition:all .3s; z-index:999; pointer-events:none; white-space:nowrap; }
+.copy-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.hidden { display:none; }
 ```
 
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="container">
-      <div class="header">
-        <span class="header-emoji">🌸</span>
-        <h1>今日、どこ行こうか</h1>
-        <p>2人の休日プランをAIが提案します</p>
-      </div>
+<div class="app">
+  <div class="container">
+    <div class="header">
+      <span class="header-emoji">🌸</span>
+      <h1>今日、どこ行こうか</h1>
+      <p>2人の休日プランをAIが提案します</p>
+    </div>
 
 ```
-  <!-- APIキー -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('planner')">✨ プラン</button>
+  <button class="tab-btn" onclick="switchTab('favorites')">❤️ お気に入り</button>
+  <button class="tab-btn" onclick="switchTab('history')">🕐 履歴</button>
+</div>
+
+<!-- プランナー -->
+<div id="tab-planner">
   <div class="api-key-card">
     <div class="section-label">🔑 Gemini APIキー</div>
     <div id="key-input-area" class="api-key-row">
       <input type="password" id="api-key-input" class="api-key-input" placeholder="AIza..." />
       <button class="save-btn" onclick="saveKey()">保存</button>
-      <div class="api-note">
-        🔒 キーはこのデバイスのlocalStorageにのみ保存されます<br>
-        取得先: aistudio.google.com → Get API key
-      </div>
+      <div class="api-note">🔒 このデバイスのlocalStorageにのみ保存されます<br>取得先: aistudio.google.com → Get API key</div>
     </div>
     <div id="key-set-area" class="api-key-row hidden">
       <div class="api-key-set-badge">✅ APIキー設定済み</div>
@@ -409,255 +157,465 @@ body {
     </div>
   </div>
 
-  <!-- 入力フォーム -->
   <div id="form-area">
+    <!-- 出発地 -->
     <div class="card">
-      <div class="section-label">☁️ 今日の天気</div>
+      <div class="section-label">📍 出発地</div>
+      <div class="location-tabs">
+        <button class="loc-tab active" onclick="switchLocMode('area')">エリア</button>
+        <button class="loc-tab" onclick="switchLocMode('pref')">都道府県</button>
+        <button class="loc-tab" onclick="switchLocMode('free')">自由入力</button>
+      </div>
+      <div id="loc-area-chips" class="chips"></div>
+      <div id="loc-pref-chips" class="chips hidden"></div>
+      <div id="loc-free-wrap" class="hidden">
+        <input type="text" class="free-input" id="loc-free-input" placeholder="例: 大阪府高槻市" style="height:42px;resize:none;" />
+      </div>
+    </div>
+
+    <!-- 天気 -->
+    <div class="card">
+      <div class="section-label">
+        ☁️ 今日の天気
+        <button class="weather-auto-btn" id="weather-auto-btn" onclick="autoWeather()">📡 自動取得</button>
+      </div>
       <div class="chips" id="weather-chips"></div>
     </div>
 
+    <!-- 気分 -->
     <div class="card">
       <div class="section-label">💭 今日の気分</div>
       <div class="chips" id="mood-chips"></div>
     </div>
 
+    <!-- 移動時間 -->
     <div class="card">
-      <div class="section-label">📍 どこまで行ける？</div>
-      <div class="chips" id="distance-chips"></div>
+      <div class="section-label">🚗 片道の移動時間</div>
+      <div class="chips" id="travel-chips"></div>
     </div>
 
+    <!-- 使える時間 -->
+    <div class="card">
+      <div class="section-label">⏰ 使える時間</div>
+      <div class="chips" id="time-chips"></div>
+    </div>
+
+    <!-- 予算 -->
     <div class="card">
       <div class="section-label">💰 予算（2人合計）</div>
-      <div class="budget-slider-wrap">
-        <div class="budget-value" id="budget-display">3,000円</div>
-        <input type="range" class="slider" id="budget-slider" min="0" max="8" value="4" oninput="updateBudget()" />
-        <div class="budget-labels"><span>無料</span><span>5万円+</span></div>
+      <div class="slider-val" id="budget-display">3,000円</div>
+      <input type="range" class="slider" id="budget-slider" min="0" max="8" value="4" oninput="updateBudget()" />
+      <div class="slider-labels"><span>無料</span><span>5万円+</span></div>
+    </div>
+
+    <!-- 件数 -->
+    <div class="card">
+      <div class="section-label">📋 提案の件数</div>
+      <div class="count-row">
+        <input type="range" class="slider" id="count-slider" min="3" max="30" value="10" oninput="updateCount()" style="margin:0;" />
+        <div class="count-badge" id="count-display">10件</div>
       </div>
     </div>
 
+    <!-- メモ -->
     <div class="card">
       <div class="section-label">📝 その他（任意）</div>
-      <textarea class="free-input" id="note-input" rows="3" placeholder="例: 猫カフェ行きたい / お昼は外で食べたい / 最近運動不足"></textarea>
+      <textarea class="free-input" id="note-input" rows="3" placeholder="例: 猫カフェ行きたい / ランチは外で / 車移動OK"></textarea>
     </div>
 
-    <button class="btn" id="submit-btn" onclick="handleSubmit()">✨ 提案してもらう</button>
-
+    <div class="btn-row">
+      <button class="btn" id="submit-btn" onclick="handleSubmit()">✨ 提案してもらう</button>
+      <button class="btn-rand" id="rand-btn" onclick="handleRandom()" title="ランダム決定">🎲</button>
+    </div>
     <div id="loading-area" class="loading-wrap hidden">
-      <div class="loading-dots">
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      </div>
-      <div class="loading-text">2人にぴったりのプランを考え中…</div>
+      <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div class="loading-text" id="loading-text">考え中…</div>
     </div>
-
     <div id="error-area" class="error-msg hidden"></div>
   </div>
 
-  <!-- 結果 -->
   <div id="result-area" class="hidden">
     <div id="result-cards"></div>
     <button class="retry-btn" onclick="resetForm()">🔄 条件を変えてもう一度</button>
   </div>
 </div>
+
+<!-- お気に入り -->
+<div id="tab-favorites" class="hidden">
+  <div id="fav-list"></div>
+</div>
+
+<!-- 履歴 -->
+<div id="tab-history" class="hidden">
+  <div id="history-list"></div>
+</div>
 ```
 
   </div>
+</div>
+<div class="copy-toast" id="copy-toast"></div>
 
-  <script>
-    const LS_KEY = "gemini_api_key";
-    const BUDGET_STEPS = [0, 500, 1000, 2000, 3000, 5000, 10000, 20000, 50000];
+<script>
+const LS_KEY="gemini_api_key", FAV_KEY="holiday_favorites", HIST_KEY="holiday_history";
+const BUDGET_STEPS=[0,500,1000,2000,3000,5000,10000,20000,50000];
+const state={ apiKey:localStorage.getItem(LS_KEY)||"", weather:"", mood:"", travel:"", availTime:"", location:"", locMode:"area" };
 
-    const state = {
-      weather: "",
-      mood: "",
-      distance: "",
-      apiKey: localStorage.getItem(LS_KEY) || "",
-    };
+const AREAS=[
+  {label:"🏙 北海道",value:"北海道"},
+  {label:"🌾 東北",value:"東北（宮城・福島など）"},
+  {label:"🗼 関東",value:"関東（東京・神奈川・埼玉・千葉など）"},
+  {label:"🏔 甲信越・北陸",value:"甲信越・北陸（長野・新潟・石川など）"},
+  {label:"🗻 東海",value:"東海（愛知・静岡・岐阜・三重）"},
+  {label:"⛩ 関西",value:"関西（大阪・京都・兵庫・奈良・滋賀・和歌山）"},
+  {label:"🌊 中国・四国",value:"中国・四国（広島・岡山・愛媛・高知など）"},
+  {label:"🌸 九州",value:"九州（福岡・熊本・鹿児島など）"},
+  {label:"🌺 沖縄",value:"沖縄"},
+];
+const PREFS=["北海道","青森","岩手","宮城","秋田","山形","福島","茨城","栃木","群馬","埼玉","千葉","東京","神奈川","新潟","富山","石川","福井","山梨","長野","岐阜","静岡","愛知","三重","滋賀","京都","大阪","兵庫","奈良","和歌山","鳥取","島根","岡山","広島","山口","徳島","香川","愛媛","高知","福岡","佐賀","長崎","熊本","大分","宮崎","鹿児島","沖縄"];
+const WEATHER=[
+  {label:"☀️ 晴れ",value:"晴れ"},{label:"🌤 曇り",value:"曇り"},
+  {label:"🌧 雨",value:"雨"},{label:"❄️ 雪・寒い",value:"雪・寒い"},
+  {label:"🌈 晴れのち曇り",value:"晴れのち曇り"},
+];
+const MOOD=[
+  {label:"🧘 まったり",value:"まったり"},{label:"🏃 アクティブ",value:"アクティブ"},
+  {label:"🍴 グルメ",value:"食べること重視"},{label:"🎮 インドア",value:"インドア"},
+  {label:"🌿 自然・癒し",value:"自然・癒し"},{label:"🛍 買い物",value:"ショッピング"},
+  {label:"🎨 文化・芸術",value:"文化・芸術"},{label:"♨️ 温泉・スパ",value:"温泉・スパ"},
+  {label:"🎡 レジャー",value:"テーマパーク・レジャー"},
+  {label:"📸 フォトジェニック",value:"インスタ映え・フォトスポット"},
+];
+const TRAVEL=[
+  {label:"🏠 徒歩圏内",value:"徒歩・自宅周辺"},
+  {label:"🚶 〜15分",value:"片道15分以内"},
+  {label:"🚃 〜30分",value:"片道30分以内"},
+  {label:"🚃 〜1時間",value:"片道1時間以内"},
+  {label:"🚄 〜2時間",value:"片道2時間以内"},
+  {label:"✈️ 2時間以上",value:"片道2時間以上（遠出OK）"},
+];
+const TIME=[
+  {label:"⚡ 1〜2時間",value:"1〜2時間"},{label:"🌤 半日",value:"半日"},
+  {label:"☀️ 1日",value:"1日中"},{label:"🌙 泊まりも可",value:"泊まりOK"},
+];
 
-    const WEATHER = [
-      { label: "☀️ 晴れ", value: "晴れ" },
-      { label: "🌤 曇り", value: "曇り" },
-      { label: "🌧 雨", value: "雨" },
-      { label: "❄️ 雪・寒い", value: "雪・寒い" },
-    ];
-    const MOOD = [
-      { label: "🧘 まったり", value: "まったり" },
-      { label: "🏃 アクティブ", value: "アクティブ" },
-      { label: "🍴 食いしん坊", value: "食べること重視" },
-      { label: "🎮 インドア", value: "インドア" },
-      { label: "🌿 自然・癒し", value: "自然・癒し" },
-      { label: "🛍 買い物", value: "ショッピング" },
-    ];
-    const DISTANCE = [
-      { label: "🏠 家でOK", value: "家・近所" },
-      { label: "🚗 30分圏内", value: "30分以内" },
-      { label: "🚄 遠出もOK", value: "遠出・1〜2時間" },
-    ];
+function buildChips(id, opts, key) {
+  document.getElementById(id).innerHTML = opts.map(o=>
+    `<button class="chip" onclick="selChip('${id}','${key}',this,'${o.value.replace(/'/g,"&apos;")}')">${o.label}</button>`
+  ).join("");
+}
+function selChip(id, key, btn, val) {
+  document.querySelectorAll(`#${id} .chip`).forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  state[key]=val; updateSubmitBtn();
+}
 
-    function formatBudget(val) {
-      if (val === 0) return "0円（無料）";
-      if (val >= 10000) return (val / 10000).toFixed(val % 10000 === 0 ? 0 : 1) + "万円";
-      return val.toLocaleString() + "円";
-    }
+function buildPrefChips() {
+  document.getElementById("loc-pref-chips").innerHTML = PREFS.map(p=>
+    `<button class="chip" onclick="selLocChip(this,'${p}')">${p}</button>`
+  ).join("");
+}
+function selLocChip(btn, val) {
+  document.querySelectorAll("#loc-area-chips .chip,#loc-pref-chips .chip").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  state.location=val; updateSubmitBtn();
+}
 
-    function buildChips(containerId, options, stateKey) {
-      const el = document.getElementById(containerId);
-      el.innerHTML = options.map(o =>
-        `<button class="chip" data-value="${o.value}" onclick="selectChip('${containerId}','${stateKey}',this,'${o.value}')">${o.label}</button>`
-      ).join("");
-    }
+function switchLocMode(mode) {
+  state.locMode=mode; state.location="";
+  document.querySelectorAll(".loc-tab").forEach((b,i)=>b.classList.toggle("active",["area","pref","free"][i]===mode));
+  document.getElementById("loc-area-chips").classList.toggle("hidden",mode!=="area");
+  document.getElementById("loc-pref-chips").classList.toggle("hidden",mode!=="pref");
+  document.getElementById("loc-free-wrap").classList.toggle("hidden",mode!=="free");
+  document.querySelectorAll("#loc-area-chips .chip,#loc-pref-chips .chip").forEach(b=>b.classList.remove("selected"));
+  if(mode==="free") state.location=document.getElementById("loc-free-input").value;
+  updateSubmitBtn();
+}
 
-    function selectChip(containerId, stateKey, btn, value) {
-      document.querySelectorAll(`#${containerId} .chip`).forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      state[stateKey] = value;
-      updateSubmitBtn();
-    }
+function updateBudget() {
+  const idx=document.getElementById("budget-slider").value;
+  document.getElementById("budget-display").textContent=formatBudget(BUDGET_STEPS[idx]);
+  const pct=(idx/8)*100;
+  document.getElementById("budget-slider").style.background=`linear-gradient(to right,#c87840 ${pct}%,#e8d4c4 ${pct}%)`;
+}
+function updateCount() { document.getElementById("count-display").textContent=document.getElementById("count-slider").value+"件"; }
+function formatBudget(v) {
+  if(v===0)return"0円（無料）";
+  if(v>=10000)return(v/10000).toFixed(v%10000===0?0:1)+"万円";
+  return v.toLocaleString()+"円";
+}
 
-    function updateBudget() {
-      const idx = document.getElementById("budget-slider").value;
-      const val = BUDGET_STEPS[idx];
-      document.getElementById("budget-display").textContent = formatBudget(val);
-      // スライダーのグラデーション更新
-      const pct = (idx / 8) * 100;
-      const slider = document.getElementById("budget-slider");
-      slider.style.background = `linear-gradient(to right, #c87840 0%, #c87840 ${pct}%, #e8d4c4 ${pct}%, #e8d4c4 100%)`;
-    }
+async function autoWeather() {
+  const btn=document.getElementById("weather-auto-btn");
+  btn.textContent="取得中…";
+  try {
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));
+    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weathercode&timezone=Asia%2FTokyo`);
+    const d=await r.json();
+    const code=d.current.weathercode;
+    let w="晴れ";
+    if(code>=71&&code<=77)w="雪・寒い";
+    else if(code>=51&&code<=67)w="雨";
+    else if(code>=1&&code<=3)w="曇り";
+    document.querySelectorAll("#weather-chips .chip").forEach(b=>{
+      const match=b.textContent.includes(w);
+      b.classList.toggle("selected",match);
+      if(match)state.weather=w;
+    });
+    updateSubmitBtn(); showToast("📡 天気を取得しました："+w);
+  } catch(e){ showToast("位置情報の取得に失敗しました"); }
+  btn.textContent="📡 自動取得";
+}
 
-    function updateSubmitBtn() {
-      const btn = document.getElementById("submit-btn");
-      const ok = state.apiKey && state.weather && state.mood && state.distance;
-      btn.disabled = !ok;
-      btn.textContent = !state.apiKey ? "🔑 まずAPIキーを設定してください" : "✨ 提案してもらう";
-    }
+function saveKey() {
+  const k=document.getElementById("api-key-input").value.trim(); if(!k)return;
+  localStorage.setItem(LS_KEY,k); state.apiKey=k;
+  document.getElementById("key-input-area").classList.add("hidden");
+  document.getElementById("key-set-area").classList.remove("hidden");
+  updateSubmitBtn();
+}
+function clearKey() {
+  localStorage.removeItem(LS_KEY); state.apiKey="";
+  document.getElementById("api-key-input").value="";
+  document.getElementById("key-input-area").classList.remove("hidden");
+  document.getElementById("key-set-area").classList.add("hidden");
+  updateSubmitBtn();
+}
+document.getElementById("api-key-input").addEventListener("keydown",e=>{if(e.key==="Enter")saveKey();});
 
-    function saveKey() {
-      const k = document.getElementById("api-key-input").value.trim();
-      if (!k) return;
-      localStorage.setItem(LS_KEY, k);
-      state.apiKey = k;
-      document.getElementById("key-input-area").classList.add("hidden");
-      document.getElementById("key-set-area").classList.remove("hidden");
-      updateSubmitBtn();
-    }
+function updateSubmitBtn() {
+  const locOk = state.location || (state.locMode==="free"&&document.getElementById("loc-free-input").value.trim());
+  const ok=state.apiKey&&state.weather&&state.mood&&state.travel&&state.availTime&&locOk;
+  document.getElementById("submit-btn").disabled=!ok;
+  document.getElementById("rand-btn").disabled=!ok;
+  document.getElementById("submit-btn").textContent=!state.apiKey?"🔑 まずAPIキーを設定":"✨ 提案してもらう";
+}
 
-    function clearKey() {
-      localStorage.removeItem(LS_KEY);
-      state.apiKey = "";
-      document.getElementById("api-key-input").value = "";
-      document.getElementById("key-input-area").classList.remove("hidden");
-      document.getElementById("key-set-area").classList.add("hidden");
-      updateSubmitBtn();
-    }
+document.getElementById("loc-free-input").addEventListener("input",function(){
+  state.location=this.value.trim(); updateSubmitBtn();
+});
 
-    async function handleSubmit() {
-      const idx = document.getElementById("budget-slider").value;
-      const budget = BUDGET_STEPS[idx];
-      const note = document.getElementById("note-input").value;
+async function callAI(prompt) {
+  const res=await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${state.apiKey}`,
+    {method:"POST",headers:{"Content-Type":"application/json"},
+     body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.95,maxOutputTokens:8000}})}
+  );
+  const data=await res.json();
+  if(data.error)throw new Error(data.error.message||"API_KEY");
+  const text=data.candidates?.[0]?.content?.parts?.[0]?.text||"";
+  return JSON.parse(text.replace(/```json|```/g,"").trim());
+}
 
-      document.getElementById("loading-area").classList.remove("hidden");
-      document.getElementById("error-area").classList.add("hidden");
-      document.getElementById("submit-btn").disabled = true;
-
-      const prompt = `あなたは2人（カップル）の休日プランを提案するアシスタントです。
-以下の条件を踏まえて、2人が楽しめるプランを3つ提案してください。
+function buildPrompt(count, extra="") {
+  const budget=formatBudget(BUDGET_STEPS[document.getElementById("budget-slider").value]);
+  const note=document.getElementById("note-input").value;
+  const loc=state.location||(document.getElementById("loc-free-input").value.trim());
+  return `あなたは2人（カップル）の休日プランを提案するアシスタントです。
+以下の条件でバリエーション豊かなプランを${count}つ提案してください。似たプランは避けること。${extra}
 
 条件:
+- 出発地・エリア: ${loc}
 - 天気: ${state.weather}
-- 気分・スタイル: ${state.mood}
-- 移動距離: ${state.distance}
-- 予算（2人合計目安）: ${formatBudget(budget)}
-- その他メモ: ${note || "特になし"}
+- 気分: ${state.mood}
+- 片道移動時間: ${state.travel}
+- 使える時間: ${state.availTime}
+- 予算（2人合計）: ${budget}
+- メモ: ${note||"特になし"}
 
-出力形式: 必ずJSON配列のみ返してください。前後の説明文やMarkdownコードブロック不要。
-[
-  {
-    "icon": "絵文字1つ",
-    "title": "プラン名（15文字以内）",
-    "tag": "カテゴリ（例: おでかけ / おうち / グルメ / アクティブ）",
-    "description": "2〜3文で具体的な楽しみ方や場所のイメージ。高槻・大阪エリアに合わせてリアルな提案で。",
-    "cost": "費用感（例: 2人で約3,000円）",
-    "time": "所要時間（例: 半日）",
-    "point": "2人向けのこだわりポイントひとこと"
-  }
-]`;
+出力: JSON配列のみ。コードブロック・説明文不要。
+[{"icon":"絵文字1つ","title":"プラン名15文字以内","tag":"カテゴリ","description":"2〜3文で具体的な場所名と内容","cost":"費用感","time":"所要時間","point":"2人向けポイント"}]`;
+}
 
-      try {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${state.apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.9, maxOutputTokens: 1000 },
-            }),
-          }
-        );
-        const data = await res.json();
-        if (data.error) throw new Error(data.error.message || "API_KEY");
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const clean = text.replace(/```json|```/g, "").trim();
-        const results = JSON.parse(clean);
-        showResults(results);
-      } catch (e) {
-        const errEl = document.getElementById("error-area");
-        errEl.textContent = e.message?.includes("key") || e.message?.includes("API_KEY")
-          ? "APIキーが無効です。正しいキーを設定してください。"
-          : "提案の取得に失敗しました。もう一度試してみてください。";
-        errEl.classList.remove("hidden");
-      } finally {
-        document.getElementById("loading-area").classList.add("hidden");
-        updateSubmitBtn();
-      }
-    }
+async function handleSubmit() {
+  const count=document.getElementById("count-slider").value;
+  setLoading(true,`${count}件のプランを考え中…`);
+  try { const r=await callAI(buildPrompt(count)); saveHistory(); showResults(r); }
+  catch(e){ showErr(e); } finally{ setLoading(false); }
+}
 
-    function showResults(results) {
-      document.getElementById("form-area").classList.add("hidden");
-      const area = document.getElementById("result-area");
-      const cards = document.getElementById("result-cards");
-      cards.innerHTML = results.map(r => `
-        <div class="result-card">
-          <div class="result-header">
-            <span class="result-icon">${r.icon}</span>
-            <div class="result-title-wrap">
-              <h2>${r.title}</h2>
-              <span class="result-tag">${r.tag}</span>
-            </div>
-          </div>
-          <div class="result-desc">${r.description}</div>
-          ${r.point ? `<div class="result-point">💡 ${r.point}</div>` : ""}
-          <div class="result-meta">
-            ${r.cost ? `<span class="meta-badge">💰 ${r.cost}</span>` : ""}
-            ${r.time ? `<span class="meta-badge">⏱ ${r.time}</span>` : ""}
-          </div>
+async function handleRandom() {
+  setLoading(true,"🎲 ランダムプランを決定中…");
+  try { const r=await callAI(buildPrompt(1,"サプライズ感のある意外な提案を1つ。")); saveHistory(); showResults(r,true); }
+  catch(e){ showErr(e); } finally{ setLoading(false); }
+}
+
+function setLoading(on,msg="") {
+  document.getElementById("loading-area").classList.toggle("hidden",!on);
+  document.getElementById("loading-text").textContent=msg;
+  document.getElementById("error-area").classList.add("hidden");
+  document.getElementById("submit-btn").disabled=on;
+  document.getElementById("rand-btn").disabled=on;
+}
+function showErr(e) {
+  const el=document.getElementById("error-area");
+  el.textContent=(e.message?.includes("key")||e.message?.includes("API_KEY"))
+    ?"APIキーが無効です。正しいキーを設定してください。"
+    :"提案の取得に失敗しました。もう一度お試しください。";
+  el.classList.remove("hidden");
+}
+
+function showResults(results,isRand=false) {
+  document.getElementById("form-area").classList.add("hidden");
+  const loc=state.location||(document.getElementById("loc-free-input").value.trim());
+  document.getElementById("result-cards").innerHTML=results.map((r,i)=>{
+    const esc=s=>(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n").replace(/"/g,"&quot;");
+    const rj=esc(JSON.stringify({...r,location:loc}));
+    return `
+    <div class="result-card" style="animation-delay:${i*.05}s">
+      <div class="result-header">
+        <span class="result-icon">${r.icon}</span>
+        <div class="result-title-wrap">
+          <h2>${r.title}</h2>
+          <span class="result-tag">${r.tag}</span>
         </div>
-      `).join("");
-      area.classList.remove("hidden");
-    }
+        <button class="fav-btn" id="fb${i}" onclick="toggleFav(${i},'${rj}')">${isFav(r.title)?"❤️":"🤍"}</button>
+      </div>
+      <div class="result-desc">${r.description}</div>
+      ${r.point?`<div class="result-point">💡 ${r.point}</div>`:""}
+      <div class="result-meta">
+        ${r.cost?`<span class="meta-badge">💰 ${r.cost}</span>`:""}
+        ${r.time?`<span class="meta-badge">⏱ ${r.time}</span>`:""}
+        <span class="meta-badge">📍 ${loc}</span>
+      </div>
+      <div class="card-actions">
+        <button class="share-btn" onclick="shareCard('${esc(r.icon)}','${esc(r.title)}','${esc(r.description)}','${esc(r.cost||"")}','${esc(r.time||"")}','${esc(r.point||"")}')">📤 共有</button>
+        <button class="cal-btn" onclick="addCal('${esc(r.title)}','${esc(r.description)}')">📅 予定追加</button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("result-area").classList.remove("hidden");
+  if(isRand)showToast("🎲 ランダムプランが決まりました！");
+}
+function resetForm() {
+  document.getElementById("result-area").classList.add("hidden");
+  document.getElementById("form-area").classList.remove("hidden");
+}
 
-    function resetForm() {
-      document.getElementById("result-area").classList.add("hidden");
-      document.getElementById("form-area").classList.remove("hidden");
-    }
+function getFavs(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||"[]")}catch{return[]}}
+function setFavs(f){localStorage.setItem(FAV_KEY,JSON.stringify(f));}
+function isFav(t){return getFavs().some(f=>f.title===t);}
+function toggleFav(i,rj) {
+  const r=JSON.parse(rj.replace(/&quot;/g,'"'));
+  let favs=getFavs(); const btn=document.getElementById(`fb${i}`);
+  if(favs.some(f=>f.title===r.title)){
+    favs=favs.filter(f=>f.title!==r.title); btn.textContent="🤍"; showToast("お気に入りから削除しました");
+  } else {
+    favs.unshift({...r,savedAt:new Date().toLocaleDateString("ja-JP")}); btn.textContent="❤️"; showToast("❤️ お気に入りに追加！");
+  }
+  setFavs(favs);
+}
 
-    // 初期化
-    buildChips("weather-chips", WEATHER, "weather");
-    buildChips("mood-chips", MOOD, "mood");
-    buildChips("distance-chips", DISTANCE, "distance");
-    updateBudget();
+function renderFavs() {
+  const favs=getFavs(); const el=document.getElementById("fav-list");
+  if(!favs.length){el.innerHTML=`<div class="fav-empty"><span>🤍</span>まだお気に入りがありません<br>プランのハートを押して保存しよう！</div>`;return;}
+  el.innerHTML=favs.map((r,i)=>{
+    const esc=s=>(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n");
+    return `
+    <div class="fav-card">
+      <div class="fav-card-header">
+        <span class="fav-card-icon">${r.icon}</span>
+        <div><div class="fav-card-title">${r.title}</div><span class="fav-card-tag">${r.tag}</span></div>
+      </div>
+      <div class="fav-card-desc">${r.description}</div>
+      ${r.point?`<div class="result-point" style="margin-bottom:8px">💡 ${r.point}</div>`:""}
+      <div class="result-meta" style="margin-bottom:9px">
+        ${r.cost?`<span class="meta-badge">💰 ${r.cost}</span>`:""}
+        ${r.time?`<span class="meta-badge">⏱ ${r.time}</span>`:""}
+        ${r.location?`<span class="meta-badge">📍 ${r.location}</span>`:""}
+        <span class="meta-badge">📅 ${r.savedAt||""}</span>
+      </div>
+      <div class="card-actions">
+        <button class="share-btn" onclick="shareCard('${esc(r.icon)}','${esc(r.title)}','${esc(r.description)}','${esc(r.cost||"")}','${esc(r.time||"")}','${esc(r.point||"")}')">📤 共有</button>
+        <button class="cal-btn" onclick="addCal('${esc(r.title)}','${esc(r.description)}')">📅 予定追加</button>
+        <button class="fav-remove-btn" onclick="rmFav(${i})">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function rmFav(i){const f=getFavs();f.splice(i,1);setFavs(f);renderFavs();showToast("削除しました");}
 
-    if (state.apiKey) {
-      document.getElementById("key-input-area").classList.add("hidden");
-      document.getElementById("key-set-area").classList.remove("hidden");
-    }
+function getHist(){try{return JSON.parse(localStorage.getItem(HIST_KEY)||"[]")}catch{return[]}}
+function saveHistory(){
+  const loc=state.location||(document.getElementById("loc-free-input").value.trim());
+  const hist=getHist();
+  hist.unshift({date:new Date().toLocaleDateString("ja-JP"),location:loc,weather:state.weather,mood:state.mood,travel:state.travel,time:state.availTime});
+  localStorage.setItem(HIST_KEY,JSON.stringify(hist.slice(0,30)));
+}
+function renderHist(){
+  const hist=getHist(); const el=document.getElementById("history-list");
+  if(!hist.length){el.innerHTML=`<div class="fav-empty"><span>🕐</span>まだ検索履歴がありません</div>`;return;}
+  el.innerHTML=hist.map((h,i)=>`
+    <div class="history-item" onclick="restoreHist(${i})">
+      <div class="history-meta">${h.date} · ${h.location} <span style="float:right;color:#c87840;font-size:11px">タップで復元</span></div>
+      <div class="history-tags">
+        <span class="history-tag">${h.weather}</span>
+        <span class="history-tag">${h.mood}</span>
+        <span class="history-tag">${h.travel}</span>
+        <span class="history-tag">${h.time}</span>
+      </div>
+    </div>`).join("");
+}
+function restoreHist(i){
+  const h=getHist()[i];
+  switchLocMode("free");
+  document.getElementById("loc-free-input").value=h.location; state.location=h.location;
+  document.querySelectorAll("#weather-chips .chip,#mood-chips .chip,#travel-chips .chip,#time-chips .chip").forEach(b=>b.classList.remove("selected"));
+  const sel=(id,val)=>{ document.querySelectorAll(`#${id} .chip`).forEach(b=>{if(b.textContent.includes(val)||val.includes(b.textContent.replace(/[^\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uff00-\uffef\w]/g,"").trim()))b.classList.add("selected");}); };
+  sel("weather-chips",h.weather); state.weather=h.weather;
+  sel("mood-chips",h.mood); state.mood=h.mood;
+  sel("travel-chips",h.travel); state.travel=h.travel;
+  sel("time-chips",h.time); state.availTime=h.time;
+  updateSubmitBtn(); switchTab("planner"); showToast("📋 条件を復元しました");
+}
 
-    // Enterキーでキー保存
-    document.getElementById("api-key-input").addEventListener("keydown", e => {
-      if (e.key === "Enter") saveKey();
-    });
+function shareCard(icon,title,desc,cost,time,point){
+  const text=[icon+" "+title,desc,point?"💡 "+point:"",cost?"💰 "+cost:"",time?"⏱ "+time:""].filter(Boolean).join("\n");
+  if(navigator.share)navigator.share({text});
+  else navigator.clipboard.writeText(text).then(()=>showToast("📋 コピーしました！"));
+}
+function addCal(title,desc){
+  const today=new Date(); const ymd=today.toISOString().split("T")[0].replace(/-/g,"");
+  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(desc)}&dates=${ymd}/${ymd}`,"_blank");
+}
 
-    updateSubmitBtn();
-  </script>
+function switchTab(tab){
+  ["planner","favorites","history"].forEach((t,i)=>{
+    document.getElementById("tab-"+t).classList.toggle("hidden",t!==tab);
+    document.querySelectorAll(".tab-btn")[i].classList.toggle("active",t===tab);
+  });
+  if(tab==="favorites")renderFavs();
+  if(tab==="history")renderHist();
+}
+
+function showToast(msg){
+  const t=document.getElementById("copy-toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2300);
+}
+
+// 初期化
+buildChips("weather-chips",WEATHER,"weather");
+buildChips("mood-chips",MOOD,"mood");
+buildChips("travel-chips",TRAVEL,"travel");
+buildChips("time-chips",TIME,"availTime");
+
+// エリアチップ（カスタムクリック）
+document.getElementById("loc-area-chips").innerHTML=AREAS.map(a=>
+  `<button class="chip" onclick="selArea(this,'${a.value.replace(/'/g,"&apos;")}')">${a.label}</button>`
+).join("");
+function selArea(btn,val){
+  document.querySelectorAll("#loc-area-chips .chip,#loc-pref-chips .chip").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected"); state.location=val; updateSubmitBtn();
+}
+
+buildPrefChips();
+updateBudget(); updateCount();
+
+if(state.apiKey){
+  document.getElementById("key-input-area").classList.add("hidden");
+  document.getElementById("key-set-area").classList.remove("hidden");
+}
+updateSubmitBtn();
+</script>
 
 </body>
 </html>
