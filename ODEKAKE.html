@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今日、どこ行こうか</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+body {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  background: #fdf8f3;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf8f3 0%, #fce9d8 50%, #fdf0e8 100%);
+  padding: 32px 16px 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  top: -200px; right: -200px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,180,130,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.app::after {
+  content: '';
+  position: fixed;
+  bottom: -200px; left: -200px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(180,140,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.header { text-align: center; margin-bottom: 32px; }
+
+.header-emoji {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 8px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.header h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px;
+  color: #4a3728;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.header p { font-size: 13px; color: #9b7a6a; margin-top: 6px; }
+
+.card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,200,160,0.4);
+  border-radius: 24px;
+  padding: 28px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(200,120,60,0.08);
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c87840;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(200,120,60,0.25);
+  background: rgba(255,255,255,0.6);
+  color: #6b4c3a;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Zen Maru Gothic', sans-serif;
+}
+
+.chip:hover { border-color: #c87840; background: rgba(200,120,60,0.08); }
+.chip.selected {
+  background: #c87840;
+  border-color: #c87840;
+  color: white;
+  box-shadow: 0 2px 12px rgba(200,120,60,0.3);
+}
+
+.budget-slider-wrap { padding: 4px 0 8px; }
+
+.slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  margin: 12px 0 8px;
+  background: linear-gradient(to right, #c87840 0%, #c87840 50%, #e8d4c4 50%, #e8d4c4 100%);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 2.5px solid #c87840;
+  box-shadow: 0 2px 8px rgba(200,120,60,0.25);
+  cursor: pointer;
+}
+
+.budget-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #9b7a6a;
+}
+
+.budget-value {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #c87840;
+  margin-bottom: 4px;
+}
+
+.free-input {
+  width: 100%;
+  border: 1.5px solid rgba(200,120,60,0.25);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 13px;
+  color: #4a3728;
+  background: rgba(255,255,255,0.6);
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s;
+}
+
+.free-input:focus { border-color: #c87840; background: rgba(255,255,255,0.9); }
+.free-input::placeholder { color: #c4a898; }
+
+.api-key-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(200,120,60,0.3);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(200,120,60,0.08);
+}
+
+.api-key-row { display: flex; flex-direction: column; gap: 8px; }
+
+.api-key-input {
+  width: 100%;
+  border: 1.5px solid rgba(200,120,60,0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 13px;
+  color: #4a3728;
+  background: rgba(255,255,255,0.7);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.api-key-input:focus { border-color: #c87840; }
+.api-key-input::placeholder { color: #c4a898; }
+
+.api-key-set-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #4a7a40;
+  background: rgba(60,160,80,0.1);
+  border: 1px solid rgba(60,160,80,0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: #c87840;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-btn:hover { background: #b06830; }
+
+.clear-btn {
+  padding: 10px 14px;
+  background: transparent;
+  color: #9b7a6a;
+  border: 1.5px solid rgba(200,120,60,0.25);
+  border-radius: 12px;
+  font-size: 12px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.clear-btn:hover { border-color: #c04040; color: #c04040; }
+
+.api-note { font-size: 11px; color: #b09080; margin-top: 10px; line-height: 1.6; }
+
+.btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #c87840 0%, #e0935a 100%);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 20px rgba(200,120,60,0.35);
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(200,120,60,0.45);
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.loading-wrap { text-align: center; padding: 32px; }
+
+.loading-dots { display: inline-flex; gap: 6px; margin-bottom: 12px; }
+
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #c87840;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-10px); opacity: 1; }
+}
+
+.loading-text { font-size: 13px; color: #9b7a6a; }
+
+.result-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(200,120,60,0.3);
+  border-radius: 24px;
+  padding: 28px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(200,120,60,0.12);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+.result-icon { font-size: 36px; flex-shrink: 0; line-height: 1; }
+
+.result-title-wrap h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 18px;
+  color: #3a2a1e;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.result-tag {
+  font-size: 11px;
+  color: #c87840;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: rgba(200,120,60,0.1);
+  padding: 2px 10px;
+  border-radius: 100px;
+  display: inline-block;
+}
+
+.result-desc {
+  font-size: 13.5px;
+  color: #5a3e30;
+  line-height: 1.75;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+}
+
+.result-point {
+  font-size: 12px;
+  color: #c87840;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.result-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.meta-badge {
+  font-size: 12px;
+  color: #7a5a48;
+  background: rgba(200,120,60,0.08);
+  border: 1px solid rgba(200,120,60,0.2);
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+.retry-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  color: #c87840;
+  border: 2px solid rgba(200,120,60,0.4);
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.retry-btn:hover { background: rgba(200,120,60,0.06); border-color: #c87840; }
+
+.error-msg {
+  text-align: center;
+  color: #c04040;
+  font-size: 13px;
+  padding: 16px;
+  background: rgba(255,200,200,0.3);
+  border-radius: 14px;
+  margin-top: 8px;
+}
+
+.hidden { display: none; }
+```
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="container">
+      <div class="header">
+        <span class="header-emoji">🌸</span>
+        <h1>今日、どこ行こうか</h1>
+        <p>2人の休日プランをAIが提案します</p>
+      </div>
+
+```
+  <!-- APIキー -->
+  <div class="api-key-card">
+    <div class="section-label">🔑 Gemini APIキー</div>
+    <div id="key-input-area" class="api-key-row">
+      <input type="password" id="api-key-input" class="api-key-input" placeholder="AIza..." />
+      <button class="save-btn" onclick="saveKey()">保存</button>
+      <div class="api-note">
+        🔒 キーはこのデバイスのlocalStorageにのみ保存されます<br>
+        取得先: aistudio.google.com → Get API key
+      </div>
+    </div>
+    <div id="key-set-area" class="api-key-row hidden">
+      <div class="api-key-set-badge">✅ APIキー設定済み</div>
+      <button class="clear-btn" onclick="clearKey()">削除</button>
+    </div>
+  </div>
+
+  <!-- 入力フォーム -->
+  <div id="form-area">
+    <div class="card">
+      <div class="section-label">☁️ 今日の天気</div>
+      <div class="chips" id="weather-chips"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">💭 今日の気分</div>
+      <div class="chips" id="mood-chips"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">📍 どこまで行ける？</div>
+      <div class="chips" id="distance-chips"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">💰 予算（2人合計）</div>
+      <div class="budget-slider-wrap">
+        <div class="budget-value" id="budget-display">3,000円</div>
+        <input type="range" class="slider" id="budget-slider" min="0" max="8" value="4" oninput="updateBudget()" />
+        <div class="budget-labels"><span>無料</span><span>5万円+</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">📝 その他（任意）</div>
+      <textarea class="free-input" id="note-input" rows="3" placeholder="例: 猫カフェ行きたい / お昼は外で食べたい / 最近運動不足"></textarea>
+    </div>
+
+    <button class="btn" id="submit-btn" onclick="handleSubmit()">✨ 提案してもらう</button>
+
+    <div id="loading-area" class="loading-wrap hidden">
+      <div class="loading-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="loading-text">2人にぴったりのプランを考え中…</div>
+    </div>
+
+    <div id="error-area" class="error-msg hidden"></div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="result-area" class="hidden">
+    <div id="result-cards"></div>
+    <button class="retry-btn" onclick="resetForm()">🔄 条件を変えてもう一度</button>
+  </div>
+</div>
+```
+
+  </div>
+
+  <script>
+    const LS_KEY = "gemini_api_key";
+    const BUDGET_STEPS = [0, 500, 1000, 2000, 3000, 5000, 10000, 20000, 50000];
+
+    const state = {
+      weather: "",
+      mood: "",
+      distance: "",
+      apiKey: localStorage.getItem(LS_KEY) || "",
+    };
+
+    const WEATHER = [
+      { label: "☀️ 晴れ", value: "晴れ" },
+      { label: "🌤 曇り", value: "曇り" },
+      { label: "🌧 雨", value: "雨" },
+      { label: "❄️ 雪・寒い", value: "雪・寒い" },
+    ];
+    const MOOD = [
+      { label: "🧘 まったり", value: "まったり" },
+      { label: "🏃 アクティブ", value: "アクティブ" },
+      { label: "🍴 食いしん坊", value: "食べること重視" },
+      { label: "🎮 インドア", value: "インドア" },
+      { label: "🌿 自然・癒し", value: "自然・癒し" },
+      { label: "🛍 買い物", value: "ショッピング" },
+    ];
+    const DISTANCE = [
+      { label: "🏠 家でOK", value: "家・近所" },
+      { label: "🚗 30分圏内", value: "30分以内" },
+      { label: "🚄 遠出もOK", value: "遠出・1〜2時間" },
+    ];
+
+    function formatBudget(val) {
+      if (val === 0) return "0円（無料）";
+      if (val >= 10000) return (val / 10000).toFixed(val % 10000 === 0 ? 0 : 1) + "万円";
+      return val.toLocaleString() + "円";
+    }
+
+    function buildChips(containerId, options, stateKey) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = options.map(o =>
+        `<button class="chip" data-value="${o.value}" onclick="selectChip('${containerId}','${stateKey}',this,'${o.value}')">${o.label}</button>`
+      ).join("");
+    }
+
+    function selectChip(containerId, stateKey, btn, value) {
+      document.querySelectorAll(`#${containerId} .chip`).forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      state[stateKey] = value;
+      updateSubmitBtn();
+    }
+
+    function updateBudget() {
+      const idx = document.getElementById("budget-slider").value;
+      const val = BUDGET_STEPS[idx];
+      document.getElementById("budget-display").textContent = formatBudget(val);
+      // スライダーのグラデーション更新
+      const pct = (idx / 8) * 100;
+      const slider = document.getElementById("budget-slider");
+      slider.style.background = `linear-gradient(to right, #c87840 0%, #c87840 ${pct}%, #e8d4c4 ${pct}%, #e8d4c4 100%)`;
+    }
+
+    function updateSubmitBtn() {
+      const btn = document.getElementById("submit-btn");
+      const ok = state.apiKey && state.weather && state.mood && state.distance;
+      btn.disabled = !ok;
+      btn.textContent = !state.apiKey ? "🔑 まずAPIキーを設定してください" : "✨ 提案してもらう";
+    }
+
+    function saveKey() {
+      const k = document.getElementById("api-key-input").value.trim();
+      if (!k) return;
+      localStorage.setItem(LS_KEY, k);
+      state.apiKey = k;
+      document.getElementById("key-input-area").classList.add("hidden");
+      document.getElementById("key-set-area").classList.remove("hidden");
+      updateSubmitBtn();
+    }
+
+    function clearKey() {
+      localStorage.removeItem(LS_KEY);
+      state.apiKey = "";
+      document.getElementById("api-key-input").value = "";
+      document.getElementById("key-input-area").classList.remove("hidden");
+      document.getElementById("key-set-area").classList.add("hidden");
+      updateSubmitBtn();
+    }
+
+    async function handleSubmit() {
+      const idx = document.getElementById("budget-slider").value;
+      const budget = BUDGET_STEPS[idx];
+      const note = document.getElementById("note-input").value;
+
+      document.getElementById("loading-area").classList.remove("hidden");
+      document.getElementById("error-area").classList.add("hidden");
+      document.getElementById("submit-btn").disabled = true;
+
+      const prompt = `あなたは2人（カップル）の休日プランを提案するアシスタントです。
+以下の条件を踏まえて、2人が楽しめるプランを3つ提案してください。
+
+条件:
+- 天気: ${state.weather}
+- 気分・スタイル: ${state.mood}
+- 移動距離: ${state.distance}
+- 予算（2人合計目安）: ${formatBudget(budget)}
+- その他メモ: ${note || "特になし"}
+
+出力形式: 必ずJSON配列のみ返してください。前後の説明文やMarkdownコードブロック不要。
+[
+  {
+    "icon": "絵文字1つ",
+    "title": "プラン名（15文字以内）",
+    "tag": "カテゴリ（例: おでかけ / おうち / グルメ / アクティブ）",
+    "description": "2〜3文で具体的な楽しみ方や場所のイメージ。高槻・大阪エリアに合わせてリアルな提案で。",
+    "cost": "費用感（例: 2人で約3,000円）",
+    "time": "所要時間（例: 半日）",
+    "point": "2人向けのこだわりポイントひとこと"
+  }
+]`;
+
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.9, maxOutputTokens: 1000 },
+            }),
+          }
+        );
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message || "API_KEY");
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const clean = text.replace(/```json|```/g, "").trim();
+        const results = JSON.parse(clean);
+        showResults(results);
+      } catch (e) {
+        const errEl = document.getElementById("error-area");
+        errEl.textContent = e.message?.includes("key") || e.message?.includes("API_KEY")
+          ? "APIキーが無効です。正しいキーを設定してください。"
+          : "提案の取得に失敗しました。もう一度試してみてください。";
+        errEl.classList.remove("hidden");
+      } finally {
+        document.getElementById("loading-area").classList.add("hidden");
+        updateSubmitBtn();
+      }
+    }
+
+    function showResults(results) {
+      document.getElementById("form-area").classList.add("hidden");
+      const area = document.getElementById("result-area");
+      const cards = document.getElementById("result-cards");
+      cards.innerHTML = results.map(r => `
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-icon">${r.icon}</span>
+            <div class="result-title-wrap">
+              <h2>${r.title}</h2>
+              <span class="result-tag">${r.tag}</span>
+            </div>
+          </div>
+          <div class="result-desc">${r.description}</div>
+          ${r.point ? `<div class="result-point">💡 ${r.point}</div>` : ""}
+          <div class="result-meta">
+            ${r.cost ? `<span class="meta-badge">💰 ${r.cost}</span>` : ""}
+            ${r.time ? `<span class="meta-badge">⏱ ${r.time}</span>` : ""}
+          </div>
+        </div>
+      `).join("");
+      area.classList.remove("hidden");
+    }
+
+    function resetForm() {
+      document.getElementById("result-area").classList.add("hidden");
+      document.getElementById("form-area").classList.remove("hidden");
+    }
+
+    // 初期化
+    buildChips("weather-chips", WEATHER, "weather");
+    buildChips("mood-chips", MOOD, "mood");
+    buildChips("distance-chips", DISTANCE, "distance");
+    updateBudget();
+
+    if (state.apiKey) {
+      document.getElementById("key-input-area").classList.add("hidden");
+      document.getElementById("key-set-area").classList.remove("hidden");
+    }
+
+    // Enterキーでキー保存
+    document.getElementById("api-key-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") saveKey();
+    });
+
+    updateSubmitBtn();
+  </script>
+
+</body>
+</html>
